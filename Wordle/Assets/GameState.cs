@@ -8,7 +8,6 @@ This class represents the state of the game, including the answerkey, attempts, 
 */
 public class GameState : MonoBehaviour
 {
-
     private readonly int MAXLENGTH = 5;
     private int attemptNum;
     public GameObject letter1;
@@ -16,6 +15,7 @@ public class GameState : MonoBehaviour
     public GameObject letter3;
     public GameObject letter4;
     public GameObject letter5;
+    public AnswerKey answer;
 
     public List<char> currentAttempt;
     private List<List<char>> attempts;
@@ -26,12 +26,6 @@ public class GameState : MonoBehaviour
         currentAttempt = new List<char>();
         attemptNum = 1;
         locateLetterBoxes();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // MODIFIES: this
@@ -46,12 +40,14 @@ public class GameState : MonoBehaviour
         
     }
 
+    // EFFECTS: adds the character onto the board at the corresponding position
     private void addToBoard(char c) {
-        Text letter = findChild();
+        Text letter = findChildText();
         letter.text = c.ToString().ToUpper();
     }
 
-    private Text findChild() {
+    // EFFECTS: return the corresponding text component based on the currentAttempt length
+    private Text findChildText() {
         switch(currentAttempt.Count) {
             case 1:
                 return letter1.transform.Find("Letter").GetComponent<Text>();
@@ -68,6 +64,23 @@ public class GameState : MonoBehaviour
         return null;
     }
 
+    // EFFECTS: return the image corresponding to the backgroundNumber
+    private Image findChildTextBackground(int backgroundNumber) {
+        switch(backgroundNumber) {
+            case 1:
+                return letter1.transform.Find("LetterBackground").GetComponent<Image>();
+            case 2: 
+                return letter2.transform.Find("LetterBackground").GetComponent<Image>();
+            case 3:
+                return letter3.transform.Find("LetterBackground").GetComponent<Image>();
+            case 4:
+                return letter4.transform.Find("LetterBackground").GetComponent<Image>();
+            case 5: 
+                return letter5.transform.Find("LetterBackground").GetComponent<Image>();
+        }
+
+        return null;
+    }
 
     // MODIFIES: this
     // EFFECTS: sets each letter to the correct GameObject
@@ -77,6 +90,51 @@ public class GameState : MonoBehaviour
         letter3 = GameObject.Find(attemptNum.ToString() + ".3");
         letter4 = GameObject.Find(attemptNum.ToString() + ".4");
         letter5 = GameObject.Find(attemptNum.ToString() + ".5");
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: removes the last letter entered by the user from the board and the list
+    public void removeLast() {
+        if (!(currentAttempt.Count == 0)) {
+            removeLastFromBoard();
+            currentAttempt.RemoveAt(currentAttempt.Count - 1);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes the last letter from the board
+    private void removeLastFromBoard() {
+        Text letter = findChildText();
+        letter.text = "";
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: increase attempt by one, and reveal the correctness of the guess
+    public void confirmAnswer() {
+        if (currentAttempt.Count == MAXLENGTH) {
+            answer.checkAnswer(currentAttempt);
+
+            if(attemptNum != 6) {
+                attemptNum += 1;
+                currentAttempt = new List<char>();
+                locateLetterBoxes();
+            } //else {
+            //    endGame();
+            //}
+        }  
+    }
+
+
+    // EFFECTS: Changes the colour of the background according to the newColour
+    public void changeColour(int position, Color newColour) {
+        Image background = findChildTextBackground(position + 1);
+        background.color = newColour;
+    }
+
+    public void exitGame() {
+        Application.Quit();
     }
 
     

@@ -17,13 +17,6 @@ public class LetterKey : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     // EFFECTS: adds the letter to the currentAttempt
     public void click() {
         game.addLetter(letter);
@@ -31,10 +24,10 @@ public class LetterKey : MonoBehaviour
     }
 
     public void enter() {
-
+        game.confirmAnswer();
     }
 
     public void undo() {
-
+        game.removeLast();
     }
 }
