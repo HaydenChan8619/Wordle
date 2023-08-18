@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,10 @@ public class GameState : MonoBehaviour
     public GameObject letter3;
     public GameObject letter4;
     public GameObject letter5;
+    
     public AnswerKey answer;
     public GameSetting settings;
+    
 
     public List<char> currentAttempt;
     private List<List<char>> attempts;
@@ -113,7 +116,10 @@ public class GameState : MonoBehaviour
     // MODIFIES: this
     // EFFECTS: increase attempt by one, and reveal the correctness of the guess
     public void confirmAnswer() {
-        if (currentAttempt.Count == MAXLENGTH) {
+        bool hasCompletedInput = currentAttempt.Count == MAXLENGTH; 
+        bool validInput = Enum.TryParse(currentAttemptStringVersion(), out ValidInputList result);
+
+        if (hasCompletedInput && validInput) {
             answer.checkAnswer(currentAttempt);
 
             if(attemptNum != 6) {
@@ -124,6 +130,10 @@ public class GameState : MonoBehaviour
             //    endGame();
             //}
         }  
+    }
+
+    private string currentAttemptStringVersion() {
+        return string.Join("",currentAttempt);
     }
 
 
