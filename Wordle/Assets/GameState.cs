@@ -130,7 +130,24 @@ public class GameState : MonoBehaviour
     // EFFECTS: Changes the colour of the background according to the newColour
     public void changeColour(int position, Color newColour) {
         Image background = findChildTextBackground(position + 1);
-        background.color = newColour;
+        StartCoroutine(ChangeColorGradually(background, newColour));
+    }
+
+
+    // EFFECTS: Changes the color gradually from original to final in one second
+    private IEnumerator ChangeColorGradually(Image background, Color targetColour)
+    {
+        Color initialColour = background.color;
+        float elapsedTime = 0;
+
+        while (elapsedTime < 1f)
+        {
+            background.color = Color.Lerp(initialColour, targetColour, elapsedTime / 1f);
+            elapsedTime += Time.deltaTime;
+            yield return null; 
+        }
+
+        background.color = targetColour; 
     }
 
     // EFFECTS: exits the program
