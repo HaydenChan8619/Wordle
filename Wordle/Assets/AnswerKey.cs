@@ -22,6 +22,12 @@ public class AnswerKey : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        setAnswerKey();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets a new answerKey
+    public void setAnswerKey() {
         string baseString = GetRandomFiveLetterWords();
         answerKey = new List<char>(baseString);
     }

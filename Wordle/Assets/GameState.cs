@@ -16,6 +16,7 @@ public class GameState : MonoBehaviour
     public GameObject letter4;
     public GameObject letter5;
     public AnswerKey answer;
+    public GameSetting settings;
 
     public List<char> currentAttempt;
     private List<List<char>> attempts;
@@ -31,7 +32,6 @@ public class GameState : MonoBehaviour
     // MODIFIES: this
     // EFFECTS: adds the character into currentAttempts, and adds that character onto the board
     public void addLetter(char c){
-        Debug.Log(currentAttempt.Count);
         int currentAttemptLength = currentAttempt.Count;
         if (currentAttemptLength < MAXLENGTH) {
             currentAttempt.Add(c);
@@ -42,13 +42,13 @@ public class GameState : MonoBehaviour
 
     // EFFECTS: adds the character onto the board at the corresponding position
     private void addToBoard(char c) {
-        Text letter = findChildText();
+        Text letter = findChildText(currentAttempt.Count);
         letter.text = c.ToString().ToUpper();
     }
 
     // EFFECTS: return the corresponding text component based on the currentAttempt length
-    private Text findChildText() {
-        switch(currentAttempt.Count) {
+    private Text findChildText(int position) {
+        switch(position) {
             case 1:
                 return letter1.transform.Find("Letter").GetComponent<Text>();
             case 2: 
@@ -105,7 +105,7 @@ public class GameState : MonoBehaviour
     // MODIFIES: this
     // EFFECTS: removes the last letter from the board
     private void removeLastFromBoard() {
-        Text letter = findChildText();
+        Text letter = findChildText(currentAttempt.Count);
         letter.text = "";
     }
 
@@ -133,9 +133,29 @@ public class GameState : MonoBehaviour
         background.color = newColour;
     }
 
+    // EFFECTS: exits the program
     public void exitGame() {
         Application.Quit();
     }
+
+    // MODIFIES: this
+    // EFFECTS: resets all the backgrounds on the board to white
+    public void resetAllBackgrounds() {
+        attemptNum = 1;
+        while (attemptNum < 7) {
+            for (int i = 0; i < 5; i++) {
+                locateLetterBoxes();
+                changeColour(i,new Color(1,1,1));
+                Text letter = findChildText(i+1);
+                letter.text = "";
+            }
+            attemptNum += 1;
+        }
+        Start();
+    }
+
+
+
 
     
 }
