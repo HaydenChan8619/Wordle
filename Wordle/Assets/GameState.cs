@@ -18,6 +18,8 @@ public class GameState : MonoBehaviour
     public GameObject letter5;
 
     public GameObject errorMessage;
+    public GameObject endGamePopUp;
+    public GameObject keyboard;
     
     public AnswerKey answer;
     public GameSetting settings;
@@ -126,9 +128,9 @@ public class GameState : MonoBehaviour
                 attemptNum += 1;
                 currentAttempt = new List<char>();
                 locateLetterBoxes();
-            } //else {
-            //    endGame();
-            //}
+            } else {
+                endGame();
+            }
         } else if (!hasCompletedInput) {
             showError("Input Incomplete!");
         } else {
@@ -136,6 +138,16 @@ public class GameState : MonoBehaviour
         }
     }
 
+    
+    public void endGame() {
+        Text correctAnswer = endGamePopUp.transform.Find("CorrectAnswer").GetComponent<Text>();
+        correctAnswer.text = answer.getAnswerKey();
+
+        keyboard.SetActive(false);
+        endGamePopUp.SetActive(true);
+    }
+
+    // EFFECTS: Displays the error popup
     public void showError(string message) {
         Text error = errorMessage.transform.Find("Error").GetComponent<Text>();
         error.text = message;
@@ -143,8 +155,9 @@ public class GameState : MonoBehaviour
         StartCoroutine(fadeError(error));
     }
 
+    // EFFECTS: fades away the error popup
     private IEnumerator fadeError(Text error) {
-        Color initialColor = error.color;
+        Color initialColour = error.color;
         float elapsedTime = 0;
 
         //yield return new WaitForSeconds(1f);
@@ -152,19 +165,16 @@ public class GameState : MonoBehaviour
         while (elapsedTime < 1f)
         {
             float normalizedTime = elapsedTime / 1f;
-            Color newColor = new Color(initialColor.r, initialColor.g, initialColor.b, Mathf.Lerp(1.0f, 0.0f, normalizedTime));
-            error.color = newColor;
+            Color newColour = new Color(initialColour.r, initialColour.g, initialColour.b, Mathf.Lerp(1.0f, 0.0f, normalizedTime));
+            error.color = newColour;
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        hideError();
-    }
-
-    private void hideError() {
         errorMessage.SetActive(false);
     }
 
+    // EFFECTS: returns the currentAttempt has a string
     private string currentAttemptStringVersion() {
         return string.Join("",currentAttempt);
     }

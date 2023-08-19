@@ -20,6 +20,8 @@ public class GameSetting : MonoBehaviour
     public void newGame() {
         answer.setAnswerKey();
         game.resetAllBackgrounds();
+        game.keyboard.SetActive(true);
+        game.endGamePopUp.SetActive(false);
         canvasReset();
     }
 

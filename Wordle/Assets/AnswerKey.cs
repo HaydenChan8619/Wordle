@@ -25,6 +25,10 @@ public class AnswerKey : MonoBehaviour
         setAnswerKey();
     }
 
+    public string getAnswerKey() {
+        return string.Join("",answerKey);
+    }
+
     // MODIFIES: this
     // EFFECTS: sets a new answerKey
     public void setAnswerKey() {
