@@ -22,6 +22,7 @@ public class GameSetting : MonoBehaviour
         game.resetAllBackgrounds();
         game.keyboard.SetActive(true);
         game.endGamePopUp.SetActive(false);
+        game.winGamePopUp.SetActive(false);
         canvasReset();
     }
 

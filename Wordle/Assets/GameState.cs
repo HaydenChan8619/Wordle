@@ -19,7 +19,9 @@ public class GameState : MonoBehaviour
 
     public GameObject errorMessage;
     public GameObject endGamePopUp;
+    public GameObject winGamePopUp;
     public GameObject keyboard;
+    
     
     public AnswerKey answer;
     public GameSetting settings;
@@ -124,13 +126,21 @@ public class GameState : MonoBehaviour
         if (hasCompletedInput && validInput) {
             answer.checkAnswer(currentAttempt);
 
-            if(attemptNum != 6) {
-                attemptNum += 1;
-                currentAttempt = new List<char>();
-                locateLetterBoxes();
-            } else {
+            attemptNum += 1;
+
+            if (currentAttemptStringVersion().Equals(answer.getAnswerKey())) {
+                winGame();
+            }
+
+            if (attemptNum == 7) {
                 endGame();
             }
+
+            currentAttempt = new List<char>();
+            locateLetterBoxes();
+            
+
+        
         } else if (!hasCompletedInput) {
             showError("Input Incomplete!");
         } else {
@@ -138,7 +148,12 @@ public class GameState : MonoBehaviour
         }
     }
 
-    
+    public void winGame() {
+        keyboard.SetActive(false);
+        winGamePopUp.SetActive(true);
+    }
+
+
     public void endGame() {
         Text correctAnswer = endGamePopUp.transform.Find("CorrectAnswer").GetComponent<Text>();
         correctAnswer.text = answer.getAnswerKey();
