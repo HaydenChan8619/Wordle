@@ -14,20 +14,24 @@ public class GameSetting : MonoBehaviour
     {
         gameplayCanvas.SetActive(false);
         startCanvas.SetActive(true);
+        game.setIsGameActive(false);
     }
 
     // EFFECTS: starts a new game
     public void newGame() {
         answer.setAnswerKey();
         game.resetAllBackgrounds();
-        game.keyboard.SetActive(true);
-        game.endGamePopUp.SetActive(false);
-        game.winGamePopUp.SetActive(false);
         canvasReset();
     }
 
-    public void canvasReset() {
+
+    // EFFECTS: reset all the canvases as required
+    private void canvasReset() {
         gameplayCanvas.SetActive(true);
         startCanvas.SetActive(false);
+        game.keyboard.SetActive(true);
+        game.endGamePopUp.SetActive(false);
+        game.winGamePopUp.SetActive(false);
+        game.setIsGameActive(true);
     }
 }

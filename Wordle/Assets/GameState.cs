@@ -11,6 +11,9 @@ public class GameState : MonoBehaviour
 {
     private readonly int MAXLENGTH = 5;
     private int attemptNum;
+    public bool isGameActive;
+    private Dictionary<KeyCode, char> inputDictionary;
+
     public GameObject letter1;
     public GameObject letter2;
     public GameObject letter3;
@@ -35,8 +38,16 @@ public class GameState : MonoBehaviour
         currentAttempt = new List<char>();
         attemptNum = 1;
         locateLetterBoxes();
+        setUpInputDictionary();
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets isGameActive according to the arguement
+    public void setIsGameActive(bool b) {
+        isGameActive = b;
+    }
+
+    
     // MODIFIES: this
     // EFFECTS: adds the character into currentAttempts, and adds that character onto the board
     public void addLetter(char c){
@@ -151,6 +162,7 @@ public class GameState : MonoBehaviour
     public void winGame() {
         keyboard.SetActive(false);
         winGamePopUp.SetActive(true);
+        setIsGameActive(false);
     }
 
 
@@ -160,6 +172,7 @@ public class GameState : MonoBehaviour
 
         keyboard.SetActive(false);
         endGamePopUp.SetActive(true);
+        setIsGameActive(false);
     }
 
     // EFFECTS: Displays the error popup
@@ -237,6 +250,37 @@ public class GameState : MonoBehaviour
             attemptNum += 1;
         }
         Start();
+    }
+
+    // EFFECTS: setup inputDictionary 
+    private void setUpInputDictionary() {
+        inputDictionary = new Dictionary<KeyCode, char>();
+
+        for (KeyCode letter = KeyCode.A; letter <= KeyCode.Z; letter++) {
+            // Add the letter to the dictionary
+            inputDictionary[letter] = (char)letter;
+        }
+
+
+
+    }
+
+    // EFFECTS: this allows keyboard inputs to also be registered in addition to using the in-game keyboard
+    public void Update() {
+
+        if (Input.anyKeyDown && isGameActive){
+            foreach(KeyCode key in inputDictionary.Keys) {
+                if (Input.GetKeyDown(key)) {
+                    addLetter(inputDictionary[key]);
+                }
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Return)) {
+                confirmAnswer();
+            } else if (Input.GetKeyDown(KeyCode.Backspace)) {
+                removeLast();
+            }
+        }
     }
 
 

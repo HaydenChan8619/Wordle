@@ -20,7 +20,6 @@ public class LetterKey : MonoBehaviour
     // EFFECTS: adds the letter to the currentAttempt
     public void click() {
         game.addLetter(letter);
-        Debug.Log("yes");
     }
 
     public void enter() {
