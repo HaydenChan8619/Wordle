@@ -16,11 +16,12 @@ public class GameState : MonoBehaviour
     public GameObject letter3;
     public GameObject letter4;
     public GameObject letter5;
+
+    public GameObject errorMessage;
     
     public AnswerKey answer;
     public GameSetting settings;
     
-
     public List<char> currentAttempt;
     private List<List<char>> attempts;
 
@@ -40,7 +41,6 @@ public class GameState : MonoBehaviour
             currentAttempt.Add(c);
             addToBoard(c);
         }
-        
     }
 
     // EFFECTS: adds the character onto the board at the corresponding position
@@ -129,7 +129,40 @@ public class GameState : MonoBehaviour
             } //else {
             //    endGame();
             //}
-        }  
+        } else if (!hasCompletedInput) {
+            showError("Input Incomplete!");
+        } else {
+            showError("Input Not Valid!");
+        }
+    }
+
+    public void showError(string message) {
+        Text error = errorMessage.transform.Find("Error").GetComponent<Text>();
+        error.text = message;
+        errorMessage.SetActive(true);
+        StartCoroutine(fadeError(error));
+    }
+
+    private IEnumerator fadeError(Text error) {
+        Color initialColor = error.color;
+        float elapsedTime = 0;
+
+        //yield return new WaitForSeconds(1f);
+
+        while (elapsedTime < 1f)
+        {
+            float normalizedTime = elapsedTime / 1f;
+            Color newColor = new Color(initialColor.r, initialColor.g, initialColor.b, Mathf.Lerp(1.0f, 0.0f, normalizedTime));
+            error.color = newColor;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        hideError();
+    }
+
+    private void hideError() {
+        errorMessage.SetActive(false);
     }
 
     private string currentAttemptStringVersion() {
