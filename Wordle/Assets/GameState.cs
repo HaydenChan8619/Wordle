@@ -12,7 +12,7 @@ public class GameState : MonoBehaviour
     private readonly int MAXLENGTH = 5;
     private int attemptNum;
     public bool isGameActive;
-    private Dictionary<KeyCode, char> inputDictionary;
+    //private Dictionary<KeyCode, char> inputDictionary;
 
     public GameObject letter1;
     public GameObject letter2;
@@ -28,6 +28,7 @@ public class GameState : MonoBehaviour
     
     public AnswerKey answer;
     public GameSetting settings;
+    public LetterKey LetterkeyScript;
     
     public List<char> currentAttempt;
     private List<List<char>> attempts;
@@ -38,7 +39,7 @@ public class GameState : MonoBehaviour
         currentAttempt = new List<char>();
         attemptNum = 1;
         locateLetterBoxes();
-        setUpInputDictionary();
+        //setUpInputDictionary();
     }
 
     // MODIFIES: this
@@ -140,10 +141,12 @@ public class GameState : MonoBehaviour
             attemptNum += 1;
 
             if (currentAttemptStringVersion().Equals(answer.getAnswerKey())) {
+                Debug.Log("win");
                 winGame();
             }
 
             if (attemptNum == 7) {
+                Debug.Log("lose");
                 endGame();
             }
 
@@ -239,6 +242,7 @@ public class GameState : MonoBehaviour
     // MODIFIES: this
     // EFFECTS: resets all the backgrounds on the board to white
     public void resetAllBackgrounds() {
+        Debug.Log("resetAllBackgrounds");
         attemptNum = 1;
         while (attemptNum < 7) {
             for (int i = 0; i < 5; i++) {
@@ -252,39 +256,39 @@ public class GameState : MonoBehaviour
         Start();
     }
 
+/*
     // EFFECTS: setup inputDictionary 
     private void setUpInputDictionary() {
         inputDictionary = new Dictionary<KeyCode, char>();
 
         for (KeyCode letter = KeyCode.A; letter <= KeyCode.Z; letter++) {
-            // Add the letter to the dictionary
             inputDictionary[letter] = (char)letter;
         }
-
-
-
     }
 
     // EFFECTS: this allows keyboard inputs to also be registered in addition to using the in-game keyboard
     public void Update() {
 
         if (Input.anyKeyDown && isGameActive){
+            bool hasCompletedAction = false;
+
+            if (Input.GetKey(KeyCode.Return) && !hasCompletedAction) {
+                Debug.Log("clickEnter");
+                confirmAnswer();
+                hasCompletedAction = true;
+            } else if (Input.GetKey(KeyCode.Backspace) && !hasCompletedAction) {
+                removeLast();
+                hasCompletedAction = true;
+            }
+
             foreach(KeyCode key in inputDictionary.Keys) {
-                if (Input.GetKeyDown(key)) {
+                if (Input.GetKey(key) && !hasCompletedAction) {
                     addLetter(inputDictionary[key]);
+                    hasCompletedAction = true;
                 }
             }
-            
-            if (Input.GetKeyDown(KeyCode.Return)) {
-                confirmAnswer();
-            } else if (Input.GetKeyDown(KeyCode.Backspace)) {
-                removeLast();
-            }
+            //Input.GetKeyDown(KeyCode.A)
         }
-    }
-
-
-
-
-    
+    } 
+*/
 }

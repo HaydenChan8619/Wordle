@@ -19,6 +19,7 @@ public class GameSetting : MonoBehaviour
 
     // EFFECTS: starts a new game
     public void newGame() {
+        Debug.Log("newGame");
         answer.setAnswerKey();
         game.resetAllBackgrounds();
         canvasReset();

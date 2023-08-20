@@ -34,6 +34,7 @@ public class AnswerKey : MonoBehaviour
     public void setAnswerKey() {
         string baseString = GetRandomFiveLetterWords();
         answerKey = new List<char>(baseString);
+        //answerKey = new List<char>("heart");
     }
 
     // EFFECTS: checks the validity of the input
